@@ -11,13 +11,13 @@ def read_file(filename):
 
 setup(
     name="showdata",
-    version="1.0",
+    version="1.1",
     author="Dechao Meng",
     url="https://github.com/silverbulletmdc/showdata",
     author_email="dechao.meng@vipl.ict.ac.cn",
     description="Large scale image dataset visiualization tool.",
     long_description_content_type="text/markdown",
-    long_description=open("README.md").read(),
+    long_description=open("README.rst").read(),
     packages=find_packages(exclude=('examples', 'examples.*')),
     scripts=glob.glob('scripts/*'),
     install_requires=['click', 'pandas']
