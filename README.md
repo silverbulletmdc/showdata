@@ -25,12 +25,12 @@ pip install showdata
 ### Basic usage
 Visualize images in a folder:
 ``` 
-datashow -i <folder_path> -o <html_path>
+showdata -i <folder_path> -o <html_path>
 ```
 
 Visualize images from pickle or json file:
 ``` 
-datashow -i example.pkl -o <html_path>
+showdata -i example.pkl -o <html_path>
 ```
 
 All string values ends with `png`/`jpg`/`jpeg` will be rendered to images. Others are rendered to text.
