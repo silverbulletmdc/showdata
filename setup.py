@@ -19,5 +19,6 @@ setup(
     description="Large scale image dataset visiualization tool.",
     long_description=read_file("README.md"),
     packages=find_packages(exclude=('examples', 'examples.*')),
-    scripts=glob.glob('scripts/*')
+    scripts=glob.glob('scripts/*'),
+    install_requires=['click', 'pandas']
 )

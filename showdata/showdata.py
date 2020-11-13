@@ -1,5 +1,7 @@
 import time
 import os
+
+
 def time_it(func):
     def wrapper(*args, **kwargs):
         start = time.time()
@@ -10,10 +12,35 @@ def time_it(func):
         return output
     return wrapper
 
+
+def load_dir(input_path, level):
+    content_table = []
+    # 处理一级目录
+    if level == 1:
+        for idx, img_name in enumerate(os.listdir(input_path)):
+            content = {'idx': idx+1, 'img_name': img_name +
+                       ' ', 'img': f"{input_path}/{img_name}"}
+            content_table.append(content)
+
+    # 处理二级目录
+    elif level == 2:
+        idx = 1
+        for class_dir in os.listdir(input_path):
+            for img_name in enumerate(os.listdir(f"{input_path}/{class_dir}")):
+                img_path = f"{input_path}/{class_dir}/{img_name}"
+                content = {"idx": idx, "class": class_dir,
+                           'img_name': img_name+' ', 'img': img_path}
+                content_table.append(content)
+                idx += 1
+
+    return content_table
+
+
 def handle_src(src, output_dir):
     src = os.path.relpath(src, output_dir)
     assert '..' not in src, 'The html file must in one of the parent folder of all images.'
     return src
+
 
 def generate_html_table(content_table, image_width='auto', image_height='auto', output_path=''):
     """Generate html table
@@ -28,7 +55,7 @@ def generate_html_table(content_table, image_width='auto', image_height='auto', 
     html = '<html>'
     html += '<head>'
 
-    html +="""
+    html += """
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.css">
@@ -72,7 +99,7 @@ def generate_html_table(content_table, image_width='auto', image_height='auto', 
     html += "</thead>"
     html += '</table>'
 
-    html +="""
+    html += """
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
@@ -89,7 +116,7 @@ def generate_html_table(content_table, image_width='auto', image_height='auto', 
             content = content_row[head]
             subhtml = ''
 
-            if type(content) == dict: # 图片，支持更丰富的样式
+            if type(content) == dict:  # 图片，支持更丰富的样式
                 src = handle_src(content['src'], output_dir)
                 alt = '' if not "alt" in content else content['alt']
                 title = '' if not "title" in content else content['title']
@@ -103,7 +130,7 @@ def generate_html_table(content_table, image_width='auto', image_height='auto', 
 
             # 图片
             elif type(content) == str and os.path.splitext(content)[-1].lower() in ['.jpg', '.png', '.jpeg', '.gif']:
-                src = handle_src(content['src'], output_dir)
+                src = handle_src(content, output_dir)
                 subhtml += f"<img src={src} alt=\"{src}\" height={height} width={width}>"
 
             # 视频
@@ -132,4 +159,3 @@ def generate_html_table(content_table, image_width='auto', image_height='auto', 
         open(output_path, 'w').write(html)
 
     return html
-
