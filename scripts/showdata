@@ -1,0 +1,53 @@
+#! /usr/bin/env/python
+from showdata import generate_html_table
+import click
+import os
+
+
+def load_dir(input_path, level):
+    content_table = []
+    # 处理一级目录
+    if level == 1:
+        for idx, img_name in enumerate(os.listdir(input_path)):
+            content = {'idx': idx+1, 'img_name': img_name+' ', 'img': f"{input_path}/{img_name}"}
+            content_table.append(content)
+
+    # 处理二级目录
+    elif level == 2:
+        idx = 1
+        for class_dir in os.listdir(input_path):
+            for img_name in enumerate(os.listdir(f"{input_path}/{class_dir}")):
+                img_path = f"{input_path}/{class_dir}/{img_name}"
+                content = {"idx": idx, "class": class_dir, 'img_name': img_name+' ', 'img': img_path}
+                content_table.append(content)
+                idx += 1
+
+    return content_table
+
+
+@click.command()
+@click.option('-i', '--input-path', help='Input path. It can be a folder, a pandas pkl/csv file or json file.')
+@click.option('-o', '--output-path', default='./index.html', help='Output path. It must in a parent directory of all images. Default is ./index.html.')
+@click.option('-w', '--width', default=400, help='Width of all the images. Default: 400')
+@click.option('-h', '--height', default='auto', help='Height of all the images. Default: auto')
+@click.option('-l', '--level', default=1, type=int, help='Level of folder to be generated')
+def cmd(input_path, output_path, width, height, level):
+    assert os.path.exists(input_path), 'Input file not exists.'
+    data_table = []
+    if os.path.isdir(input_path):
+        data_table = load_dir(input_path, output_path, level)
+
+    elif input_path.endswith('pkl'):
+        import pandas as pd
+        data_table = pd.read_pickle(input_path).to_dict('records')
+
+    elif input_path.endswith('csv'):
+        import pandas as pd
+        data_table = pd.read_csv(input_path).to_dict('records')
+
+    elif input_path.endswith('json'):
+        import json
+        with open(input_path, 'r') as f:
+            data_table = json.load(f)
+
+    generate_html_table(data_table, width, height, output_path)

@@ -1,0 +1,135 @@
+import time
+import os
+def time_it(func):
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        print(f'Start {func.__name__}')
+        output = func(*args, **kwargs)
+        end = time.time()
+        print(f'End {func.__name__}. Elapsed {end-start} seconds')
+        return output
+    return wrapper
+
+def handle_src(src, output_dir):
+    src = os.path.relpath(src, output_dir)
+    assert '..' not in src, 'The html file must in one of the parent folder of all images.'
+    return src
+
+def generate_html_table(content_table, image_width='auto', image_height='auto', output_path=''):
+    """Generate html table
+
+    Args:
+        content_table: 2D table
+        width: image width
+        height: image height
+        output_path: output html path.
+    """
+    output_dir = os.path.split(output_path)[0]
+    html = '<html>'
+    html += '<head>'
+
+    html +="""
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.css">
+        <link href="https://unpkg.com/bootstrap-table@1.18.0/dist/extensions/page-jump-to/bootstrap-table-page-jump-to.min.css" rel="stylesheet">
+
+
+    """
+
+    html += '</head>'
+    html += '<body>'
+    html += """
+        <table
+            class="table"
+            id="table"
+            data-search="true"
+            data-pagination="true"
+            data-show-toggle="true"
+            data-show-jump-to="true"
+            data-page-list="[10, 25, 50, 100, all]"
+            data-show-refresh="true"
+            data-show-fullscreen="true"
+            data-show-columns="true"
+            data-show-columns-toggle-all="true"
+            data-show-export="true"
+            data-click-to-select="true"
+            data-minimum-count-columns="2"
+            data-show-pagination-switch="true"
+            data-id-field="id"
+            data-show-footer="true"
+        >
+    """
+
+    html += '<thead>'
+    html += '<tr>'
+    heads = content_table[0].keys()
+
+    for i, h in enumerate(heads):
+        html += f'<th data-field="{h}" data-sortable=true>{h}</th>'
+
+    html += "</tr>"
+    html += "</thead>"
+    html += '</table>'
+
+    html +="""
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.js"></script>
+        <script src="https://unpkg.com/bootstrap-table@1.18.0/dist/extensions/page-jump-to/bootstrap-table-page-jump-to.min.js"></script>
+    """
+
+    width = image_width
+    height = image_height
+    all_content_dict = []
+    for content_row in content_table:
+        content_dict = {}
+        for i, head in enumerate(heads):
+            content = content_row[head]
+            subhtml = ''
+
+            if type(content) == dict: # 图片，支持更丰富的样式
+                src = handle_src(content['src'], output_dir)
+                alt = '' if not "alt" in content else content['alt']
+                title = '' if not "title" in content else content['title']
+                item_width = width if not "width" in content else content['width']
+                item_height = height if not "height" in content else content['height']
+                text = '' if not "text" in content else content['text']
+                style = '' if not "style" in content else content['style']
+                if text != '':
+                    subhtml += f"<div>{text}</div>"
+                subhtml += f"<img src={src} alt=\"{alt}\" title=\"{title}\" height={item_height} width={item_width} style=\"{style}\">"
+
+            # 图片
+            elif type(content) == str and os.path.splitext(content)[-1].lower() in ['.jpg', '.png', '.jpeg', '.gif']:
+                src = handle_src(content['src'], output_dir)
+                subhtml += f"<img src={src} alt=\"{src}\" height={height} width={width}>"
+
+            # 视频
+            elif type(content) == str and os.path.splitext(content)[-1].lower() in ['.mp4', '.webm']:
+                src = handle_src(content['src'], output_dir)
+                subhtml += f"<video src={src} alt=\"{src}\" height={height} width={width}>"
+
+            else:
+                subhtml = f"{content}"
+
+            content_dict[head] = subhtml
+
+        all_content_dict.append(content_dict)
+
+    html += """
+    <script>
+    var $table = $('#table')
+    $(function() {
+        var data = %s;     
+        $table.bootstrapTable({data: data, paginationUseIntermediate: true})
+    })
+    </script>
+    """ % str(all_content_dict)
+    html += '</body></html>'
+    if output_path != '':
+        open(output_path, 'w').write(html)
+
+    return html
+

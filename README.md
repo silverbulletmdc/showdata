@@ -1,0 +1,62 @@
+![logo](assets/logo.png)
+# Show Data: Show your dataset in web browser!
+
+Show Data is to generate html tables for large scale image dataset, especially for the dataset in remote server. 
+It provides some useful commond line tools and fully customizeble API reference to generate html table different tasks.
+
+## Examples
+It supports filtering data by text, sorting data by coloum values and pagination. 
+
+VeRiWild dataset
+![example](assets/example1.png)
+![example](assets/example2.png)
+
+ReID Strong baseline Results  
+![example](assets/example3.png)
+
+## Install 
+
+```
+pip install showdata
+```
+
+## Command Line Tools
+
+### Basic usage
+Visualize images in a folder:
+``` 
+datashow -i <folder_path> -o <html_path>
+```
+
+Visualize images from pickle or json file:
+``` 
+datashow -i example.pkl -o <html_path>
+```
+
+All string values ends with `png`/`jpg`/`jpeg` will be rendered to images. Others are rendered to text.
+
+### Image Dict 
+
+If you pass a json file, you can set the image values to a dict to provide more customizeble configurations. 
+
+For example, 
+```json
+[
+    {
+        'name': '001',
+        'img': {
+            'src': "images/0001.jpg",
+            'text': "The text will be shown on the top of the image",
+            'style': "border: 2mm solid green"
+        }
+    }
+    {
+        'name': '002',
+        'img': {
+            'src': "images/0002.jpg",
+            'text': "blabla",
+            'style': "border: 2mm solid red"
+        }
+    }
+]
+```
