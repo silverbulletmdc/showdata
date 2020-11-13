@@ -60,3 +60,25 @@ For example,
     }
 ]
 ```
+
+Run `python -m http.server` and open your web browser to check the generated web page.
+
+## API
+```python
+from showdata import generate_html_table
+data = [
+    {
+        "idx": 1,
+        "label": 'cat',
+        "img": 'images/cat.jpg',
+        "mask": 'images/cat_mask.png',
+    },
+    {
+        "idx": 2,
+        "label": 'dog',
+        "img": 'images/dog.jpg',
+        "mask": 'images/dog_mask.png',
+    },
+]
+generate_html_table(data, output_path='index.html')
+```
