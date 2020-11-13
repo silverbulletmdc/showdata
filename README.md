@@ -43,19 +43,19 @@ For example,
 ```json
 [
     {
-        'name': '001',
-        'img': {
-            'src': "images/0001.jpg",
-            'text': "The text will be shown on the top of the image",
-            'style': "border: 2mm solid green"
+        "name": "001",
+        "img": {
+            "src": "images/0001.jpg",
+            "text": "The text will be shown on the top of the image",
+            "style": "border: 2mm solid green"
         }
     }
     {
-        'name': '002',
-        'img': {
-            'src': "images/0002.jpg",
-            'text': "blabla",
-            'style': "border: 2mm solid red"
+        "name": "002",
+        "img": {
+            "src": "images/0002.jpg",
+            "text": "blabla",
+            "style": "border: 2mm solid red"
         }
     }
 ]
