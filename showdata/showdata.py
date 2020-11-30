@@ -1,5 +1,6 @@
 import time
 import os
+from tqdm import tqdm
 
 
 def time_it(func):
@@ -26,7 +27,10 @@ def load_dir(input_path, level):
     elif level == 2:
         idx = 1
         for class_dir in os.listdir(input_path):
-            for img_name in enumerate(os.listdir(f"{input_path}/{class_dir}")):
+            if not os.path.isdir(f'{input_path}/{class_dir}'):
+                continue
+                
+            for img_name in os.listdir(f"{input_path}/{class_dir}"):
                 img_path = f"{input_path}/{class_dir}/{img_name}"
                 content = {"idx": idx, "class": class_dir,
                            'img_name': img_name+' ', 'img': img_path}
@@ -42,7 +46,7 @@ def handle_src(src, output_dir):
     return src
 
 
-def generate_html_table(content_table, image_width='auto', image_height='auto', output_path=''):
+def generate_html_table(content_table, image_width='auto', image_height='auto', output_path='', float_precision=3, max_str_len=30):
     """Generate html table
 
     Args:
@@ -50,6 +54,8 @@ def generate_html_table(content_table, image_width='auto', image_height='auto', 
         width: image width
         height: image height
         output_path: output html path.
+        float_precision: Max precision of float values.
+        max_str_len: Max string length.
     """
     output_dir = os.path.split(output_path)[0]
     html = '<html>'
@@ -110,10 +116,10 @@ def generate_html_table(content_table, image_width='auto', image_height='auto', 
     width = image_width
     height = image_height
     all_content_dict = []
-    for content_row in content_table:
+    for content_row in tqdm(content_table, desc='Generating rows...'):
         content_dict = {}
         for i, head in enumerate(heads):
-            content = content_row[head]
+            content = 'None' if not head in content_row else content_row[head]
             subhtml = ''
 
             if type(content) == dict:  # 图片，支持更丰富的样式
@@ -135,11 +141,17 @@ def generate_html_table(content_table, image_width='auto', image_height='auto', 
 
             # 视频
             elif type(content) == str and os.path.splitext(content)[-1].lower() in ['.mp4', '.webm']:
-                src = handle_src(content['src'], output_dir)
+                src = handle_src(content, output_dir)
                 subhtml += f"<video src={src} alt=\"{src}\" height={height} width={width}>"
 
+            elif type(content) == float:
+                subhtml = f"{content:.{float_precision}f}%"
+
             else:
-                subhtml = f"{content}"
+                if max_str_len > 0:
+                    subhtml = f"{str(content)[:max_str_len]}"
+                else:
+                    subhtml = str(content)
 
             content_dict[head] = subhtml
 

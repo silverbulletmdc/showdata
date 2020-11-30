@@ -7,7 +7,7 @@ import os
 @click.command()
 @click.option('-i', '--input-path', help='Input path. It can be a folder, a pandas pkl/csv file or json file.')
 @click.option('-o', '--output-path', default='./index.html', help='Output path. It must in a parent directory of all images. Default is ./index.html.')
-@click.option('-w', '--width', default=400, help='Width of all the images. Default: 400')
+@click.option('-w', '--width', default='400', help='Width of all the images. Default: 400')
 @click.option('-h', '--height', default='auto', help='Height of all the images. Default: auto')
 @click.option('-l', '--level', default=1, type=int, help='Level of folder to be generated')
 def cmd(input_path, output_path, width, height, level):
@@ -15,10 +15,6 @@ def cmd(input_path, output_path, width, height, level):
     data_table = []
     if os.path.isdir(input_path):
         data_table = load_dir(input_path, level)
-        import pandas as pd
-        pd.DataFrame(data_table).to_pickle('test_datashow.pkl')
-        pd.DataFrame(data_table).to_csv('test_datashow.csv')
-
 
     elif input_path.endswith('pkl'):
         import pandas as pd
