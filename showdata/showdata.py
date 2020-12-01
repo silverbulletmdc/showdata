@@ -40,13 +40,16 @@ def load_dir(input_path, level):
     return content_table
 
 
-def handle_src(src, output_dir):
-    src = os.path.relpath(src, output_dir)
-    assert '..' not in src, 'The html file must in one of the parent folder of all images.'
+def handle_src(src, output_dir, rel_path=True):
+    if rel_path:
+        src = os.path.relpath(src, output_dir)
+        assert '..' not in src, 'The html file must in one of the parent folder of all images.'
+    else:
+        return src
     return src
 
 
-def generate_html_table(content_table, image_width='auto', image_height='auto', output_path='', float_precision=3, max_str_len=30):
+def generate_html_table(content_table, image_width='auto', image_height='auto', output_path='', float_precision=3, max_str_len=30, rel_path=True):
     """Generate html table
 
     Args:
@@ -56,6 +59,7 @@ def generate_html_table(content_table, image_width='auto', image_height='auto', 
         output_path: output html path.
         float_precision: Max precision of float values.
         max_str_len: Max string length.
+        rel_path: Whether to use the relative path of input image and output path.
     """
     output_dir = os.path.split(output_path)[0]
     html = '<html>'
@@ -123,7 +127,7 @@ def generate_html_table(content_table, image_width='auto', image_height='auto', 
             subhtml = ''
 
             if type(content) == dict:  # 图片，支持更丰富的样式
-                src = handle_src(content['src'], output_dir)
+                src = handle_src(content['src'], output_dir, rel_path)
                 alt = '' if not "alt" in content else content['alt']
                 title = '' if not "title" in content else content['title']
                 item_width = width if not "width" in content else content['width']
@@ -136,12 +140,12 @@ def generate_html_table(content_table, image_width='auto', image_height='auto', 
 
             # 图片
             elif type(content) == str and os.path.splitext(content)[-1].lower() in ['.jpg', '.png', '.jpeg', '.gif']:
-                src = handle_src(content, output_dir)
+                src = handle_src(content, output_dir, rel_path)
                 subhtml += f"<img src={src} alt=\"{src}\" height={height} width={width}>"
 
             # 视频
             elif type(content) == str and os.path.splitext(content)[-1].lower() in ['.mp4', '.webm']:
-                src = handle_src(content, output_dir)
+                src = handle_src(content, output_dir, rel_path)
                 subhtml += f"<video src={src} alt=\"{src}\" height={height} width={width}>"
 
             elif type(content) == float:
