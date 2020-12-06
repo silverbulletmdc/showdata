@@ -173,7 +173,7 @@ def generate_html_table(content_table, image_width='auto', image_height='auto', 
     html += '</body></html>'
     if output_path == '':
         output_path = './index.html'
-    if save == True:
+    if save:
         open(output_path, 'w').write(html)
 
     return html
