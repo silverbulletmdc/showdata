@@ -49,7 +49,7 @@ def handle_src(src, output_dir, rel_path=True):
     return src
 
 
-def generate_html_table(content_table, image_width='auto', image_height='auto', output_path='', float_precision=3, max_str_len=30, rel_path=True):
+def generate_html_table(content_table, image_width='auto', image_height='auto', output_path='', float_precision=3, max_str_len=30, rel_path=True, save=True):
     """Generate html table
 
     Args:
@@ -149,7 +149,7 @@ def generate_html_table(content_table, image_width='auto', image_height='auto', 
                 subhtml += f"<video src={src} alt=\"{src}\" height={height} width={width}>"
 
             elif type(content) == float:
-                subhtml = f"{content:.{float_precision}f}%"
+                subhtml = f"{content:.{float_precision}f}"
 
             else:
                 if max_str_len > 0:
@@ -171,7 +171,9 @@ def generate_html_table(content_table, image_width='auto', image_height='auto', 
     </script>
     """ % str(all_content_dict)
     html += '</body></html>'
-    if output_path != '':
+    if output_path == '':
+        output_path = './index.html'
+    if save == 'True':
         open(output_path, 'w').write(html)
 
     return html
