@@ -49,23 +49,25 @@ def handle_src(src, output_dir, rel_path=True):
     return src
 
 
-def generate_html_table(content_table, image_width='auto', image_height='auto', output_path='', float_precision=3, max_str_len=30, rel_path=True, save=True):
+def generate_html_table(content_table, image_width='auto', image_height='auto', output_path='', float_precision=3, max_str_len=30, rel_path=True, save=True, title="Showdata"):
     """Generate html table
 
     Args:
-        content_table: 2D table
-        width: image width
-        height: image height
+        content_table: 2D table.
+        width: image width.
+        height: image height.
         output_path: output html path.
         float_precision: Max precision of float values.
         max_str_len: Max string length.
         rel_path: Whether to use the relative path of input image and output path.
+        save: Whether to save output file.
     """
     output_dir = os.path.split(output_path)[0]
     html = '<html>'
     html += '<head>'
 
-    html += """
+    html += f"""
+        <title>{title}</title>
         <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
         <meta http-equiv="Pragma" content="no-cache" />
         <meta http-equiv="Expires" content="0" />
@@ -74,6 +76,9 @@ def generate_html_table(content_table, image_width='auto', image_height='auto', 
         <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.css">
         <link href="https://unpkg.com/bootstrap-table@1.18.0/dist/extensions/page-jump-to/bootstrap-table-page-jump-to.min.css" rel="stylesheet">
+        <link href="https://unpkg.com/bootstrap-table@1.18.1/dist/bootstrap-table.min.css" rel="stylesheet">
+
+
 
 
     """
@@ -99,6 +104,7 @@ def generate_html_table(content_table, image_width='auto', image_height='auto', 
             data-show-pagination-switch="true"
             data-id-field="id"
             data-show-footer="true"
+            data-filter-control="true"
         >
     """
 
@@ -107,7 +113,7 @@ def generate_html_table(content_table, image_width='auto', image_height='auto', 
     heads = content_table[0].keys()
 
     for i, h in enumerate(heads):
-        html += f'<th data-field="{h}" data-sortable=true>{h}</th>'
+        html += f'<th data-field="{h}" data-sortable=true data-filter-control="input">{h}</th>'
 
     html += "</tr>"
     html += "</thead>"
@@ -119,6 +125,7 @@ def generate_html_table(content_table, image_width='auto', image_height='auto', 
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
         <script src="https://unpkg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.js"></script>
         <script src="https://unpkg.com/bootstrap-table@1.18.0/dist/extensions/page-jump-to/bootstrap-table-page-jump-to.min.js"></script>
+        <script src="https://unpkg.com/bootstrap-table@1.18.1/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
     """
 
     width = image_width
@@ -150,7 +157,7 @@ def generate_html_table(content_table, image_width='auto', image_height='auto', 
             # 视频
             elif type(content) == str and os.path.splitext(content)[-1].lower() in ['.mp4', '.webm']:
                 src = handle_src(content, output_dir, rel_path)
-                subhtml += f"<video src={src} alt=\"{src}\" height={height} width={width}>"
+                subhtml += f"<video src={src} alt=\"{src}\" height={height} width={width} controls>"
 
             elif type(content) == float:
                 subhtml = f"{content:.{float_precision}f}"
