@@ -16,7 +16,7 @@ def main():
 @click.option('-r', '--rel-path', default=True, type=bool, help='Whether to use relative path of input path and output path. Default is True')
 @click.option('-f', '--float-precision', default=2, type=int, help='Float precision. Default is 2')
 @click.option('-m', '--max-str-len', default=50, type=int, help='Max string length. Default is 50')
-def cmd(input_path, output_path, width, height, level, rel_path, float_precision, max_str_len):
+def show(input_path, output_path, width, height, level, rel_path, float_precision, max_str_len):
     assert os.path.exists(input_path), 'Input file not exists.'
     data_table = []
     if os.path.isdir(input_path):

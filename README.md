@@ -25,12 +25,17 @@ pip install showdata
 ### Basic usage
 Visualize images in a folder:
 ``` 
-showdata -i <folder_path> -o <html_path>
+show-cli show -i <folder_path> -o <html_path>
 ```
 
 Visualize images from pickle or json file:
 ``` 
-showdata -i example.pkl -o <html_path>
+show-cli show -i example.pkl -o <html_path>
+```
+
+Compare images with the same name from different folders 
+```
+show-cli compare <path-a> <path-b> <path-c> -o <output-path>
 ```
 
 All string values ends with `png`/`jpg`/`jpeg` will be rendered to images. Others are rendered to text.
