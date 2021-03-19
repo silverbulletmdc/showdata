@@ -8,7 +8,7 @@ CORS(app)
 
 
 def parse_folder(full_path):
-    files = os.listdir(full_path)
+    files = sorted(os.listdir(full_path))
     table = []
     for i, file in enumerate(files):
         row = {}

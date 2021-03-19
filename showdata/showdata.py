@@ -18,7 +18,7 @@ def load_dir(input_path, level):
     content_table = []
     # 处理一级目录
     if level == 1:
-        for idx, img_name in enumerate(os.listdir(input_path)):
+        for idx, img_name in enumerate(sorted(os.listdir(input_path))):
             content = {'idx': idx+1, 'img_name': img_name +
                        ' ', 'img': f"{input_path}/{img_name}"}
             content_table.append(content)
@@ -26,11 +26,11 @@ def load_dir(input_path, level):
     # 处理二级目录
     elif level == 2:
         idx = 1
-        for class_dir in os.listdir(input_path):
+        for class_dir in sorted(os.listdir(input_path)):
             if not os.path.isdir(f'{input_path}/{class_dir}'):
                 continue
                 
-            for img_name in os.listdir(f"{input_path}/{class_dir}"):
+            for img_name in sorted(os.listdir(f"{input_path}/{class_dir}")):
                 img_path = f"{input_path}/{class_dir}/{img_name}"
                 content = {"idx": idx, "class": class_dir,
                            'img_name': img_name+' ', 'img': img_path}
