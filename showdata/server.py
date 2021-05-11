@@ -14,7 +14,7 @@ def parse_folder(full_path):
         row = {}
         if os.path.isdir(full_path + '/' + file):
             file = file + '/'
-        row["filename"] = f'<a href="{file}"> {file} </a>'
+        row["filename"] = f'<a href="{file.replace("#", "%23")}"> {file} </a>'
         row["type"] = f"{os.path.splitext(file)[-1]}"
         row["size"] = f"{os.path.getsize(full_path + '/' + file) / 1024:.2f}K"
         row["content"] = file
