@@ -70,6 +70,7 @@ def generate_html_table(content_table, image_width='auto', image_height='auto', 
         <title>{title}</title>
         <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
         <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta http-equiv="Expires" content="0" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css" rel="stylesheet">
