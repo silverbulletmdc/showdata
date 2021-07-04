@@ -11,7 +11,7 @@ def read_file(filename):
 
 setup(
     name="showdata",
-    version="1.3.7",
+    version="1.3.8",
     author="Dechao Meng",
     url="https://github.com/silverbulletmdc/showdata",
     author_email="dechao.meng@vipl.ict.ac.cn",

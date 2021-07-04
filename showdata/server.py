@@ -1,4 +1,4 @@
-from flask import Flask, request, Response
+from flask import Flask, request, Response, redirect
 import mimetypes
 import os
 from showdata import generate_html_table
@@ -24,12 +24,17 @@ def parse_folder(full_path):
     return generate_html_table(table, image_width=400, save=False, rel_path=False, title=full_path, max_str_len=-1)
 
 
-@app.route('/', defaults={"subpath": "."})
+@app.route('/', defaults={"subpath": "./"})
 @app.route('/<path:subpath>')
 def server(subpath):
     full_path = f'{subpath.strip()}'
+    print(full_path)
     if os.path.exists(full_path):
         if os.path.isdir(full_path):
+            if full_path[-1] != '/':
+                return redirect(full_path + '/')
+            if os.path.exists(full_path + 'index.html'):
+                return redirect(full_path + 'index.html')
             return parse_folder(full_path)
         else:
             data = open(full_path, 'rb').read()
