@@ -9,6 +9,7 @@ allow_modify = False
 show_delete_button = False
 show_upload_button = False
 index_hide = True
+password = "1234"
 app = Flask(__name__)
 CORS(app)
 
@@ -65,7 +66,7 @@ def parse_folder(full_path):
                 row["delete"] = ""
             else:
                 row["delete"] = f"""<button class="btn btn-danger" onclick="
-                fetch('{quote(file)}?action=delete', {{method: 'GET'}})
+                fetch('{quote(file)}?action=delete&password={password}', {{method: 'GET'}})
                 .then(function(response){{location.reload()}});
                 ">Delete</button>"""
         table.append(row)
@@ -97,7 +98,8 @@ def server(subpath):
 
         # 删除文件
         elif action == 'delete':
-            if allow_modify:
+            user_password = request.args.get('password', default='1234', type=str)
+            if allow_modify and password == user_password:
                 if os.path.exists(full_path):
                     os.system('rm -f "%s"' % full_path)
                     return f'Delete {full_path}', 200
