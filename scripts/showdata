@@ -1,5 +1,6 @@
 #! /usr/bin/env/python
 from showdata import generate_html_table, load_dir
+import showdata.server as showdata_server 
 import click
 import os
 
@@ -62,10 +63,15 @@ def compare(compare_folders, output_path, width):
 @main.command()
 @click.option('-p', '--port', default='8000')
 @click.option('-h', '--host', default='0.0.0.0')
-@click.option('-d', '--debug', default=False)
-def server(port, host, debug):
-    from showdata.server import app
-    app.run(host, port, debug=debug)
+@click.option('-d', '--debug', default=False, type=bool, help="Whether to open the flask app in debug mode.")
+@click.option('--allow-modify', default=False, type=bool, help="Whether to allow the user to modify your files.")
+@click.option('--show-delete-button', default=False, type=bool, help="Whethter to show the delete button.")
+@click.option('--index-hide', default=True, type=bool, help="Whether to hide the folder content if there is a index.html in that folder.")
+def server(port, host, debug, allow_modify, show_delete_button, index_hide):
+    showdata_server.allow_modify = allow_modify
+    showdata_server.show_delete_button = show_delete_button
+    showdata_server.index_hide = index_hide
+    showdata_server.app.run(host, port, debug=debug)
 
 
 if __name__ == "__main__":
