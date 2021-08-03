@@ -11,11 +11,11 @@ def read_file(filename):
 
 setup(
     name="showdata",
-    version="1.4.0",
+    version="1.4.1",
     author="Dechao Meng",
     url="https://github.com/silverbulletmdc/showdata",
     author_email="dechao.meng@vipl.ict.ac.cn",
-    description="Large scale image dataset visiualization tool.",
+    description="Remote file system visualizer and manager.",
     long_description_content_type="text/markdown",
     long_description=open("README.rst").read(),
     packages=find_packages(exclude=('examples', 'examples.*')),
