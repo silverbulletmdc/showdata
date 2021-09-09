@@ -73,6 +73,7 @@ def generate_html_table(content_table, image_width='auto', image_height='auto', 
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta http-equiv="Expires" content="0" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link href="https://unpkg.com/jquery-resizable-columns@0.2.3/dist/jquery.resizableColumns.css" rel="stylesheet">
         <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://unpkg.zhimg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.css">
@@ -117,6 +118,7 @@ def generate_html_table(content_table, image_width='auto', image_height='auto', 
     html += '</table>'
 
     html += """
+        <script src="https://unpkg.com/jquery-resizable-columns@0.2.3/dist/jquery.resizableColumns.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.min.js"></script>
