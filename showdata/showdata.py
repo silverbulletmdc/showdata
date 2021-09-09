@@ -101,6 +101,7 @@ def generate_html_table(content_table, image_width='auto', image_height='auto', 
             data-id-field="id"
             data-show-footer="true"
             data-filter-control="true"
+            data-resizable="true"
         >
     """
 
@@ -122,6 +123,7 @@ def generate_html_table(content_table, image_width='auto', image_height='auto', 
         <script src="https://unpkg.zhimg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.js"></script>
         <script src="https://unpkg.zhimg.com/bootstrap-table@1.18.0/dist/extensions/page-jump-to/bootstrap-table-page-jump-to.min.js"></script>
         <script src="https://unpkg.zhimg.com/bootstrap-table@1.18.1/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+        <script src="https://unpkg.zhimg.com/bootstrap-table@1.18.1/dist/extensions/resizable/bootstrap-table-resizable.js"></script>
     """
 
     width = image_width
