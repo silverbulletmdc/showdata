@@ -23,10 +23,11 @@ pip install showdata
 ## Command Line Tools
 
 ### Basic usage
-Open a file server (replace the python -m http.server)
+Open a file server (an stronger alternative to `python -m http.server`)
 ``` 
 showdata server -p <port, default 8000> -h <host, default 0.0.0.0>
 ```
+
 
 Visualize images in a folder:
 ``` 
