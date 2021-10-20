@@ -49,7 +49,7 @@ def handle_src(src, output_dir, rel_path=True):
     return src
 
 
-def generate_html_table(content_table, image_width='auto', image_height='auto', output_path='', float_precision=3, max_str_len=30, rel_path=True, save=True, title="Showdata"):
+def generate_html_table(content_table, image_width='auto', image_height='auto', output_path='', float_precision=3, max_str_len=30, rel_path=True, save=True, title="Showdata", head_div=None):
     """Generate html table
 
     Args:
@@ -61,6 +61,7 @@ def generate_html_table(content_table, image_width='auto', image_height='auto', 
         max_str_len: Max string length.
         rel_path: Whether to use the relative path of input image and output path.
         save: Whether to save output file.
+        head_div: You can append some custom info in the top of the page.
     """
     output_dir = os.path.split(output_path)[0]
     html = '<html>'
@@ -82,6 +83,8 @@ def generate_html_table(content_table, image_width='auto', image_height='auto', 
 
     html += '</head>'
     html += '<body>'
+    if head_div:
+        html += head_div
     html += """
         <table
             class="table"
