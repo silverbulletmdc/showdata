@@ -29,7 +29,7 @@ def load_dir(input_path, level):
         for class_dir in sorted(os.listdir(input_path)):
             if not os.path.isdir(f'{input_path}/{class_dir}'):
                 continue
-                
+
             for img_name in sorted(os.listdir(f"{input_path}/{class_dir}")):
                 img_path = f"{input_path}/{class_dir}/{img_name}"
                 content = {"idx": idx, "class": class_dir,
@@ -49,7 +49,17 @@ def handle_src(src, output_dir, rel_path=True):
     return src
 
 
-def generate_html_table(content_table, image_width='auto', image_height='auto', output_path='', float_precision=3, max_str_len=30, rel_path=True, save=True, title="Showdata", head_div=None):
+def generate_html_table(content_table,
+                        image_width='auto',
+                        image_height='auto',
+                        output_path='',
+                        float_precision=3,
+                        max_str_len=30,
+                        rel_path=True,
+                        save=True,
+                        title="Showdata",
+                        head_div=None,
+                        page_size=10):
     """Generate html table
 
     Args:
@@ -62,6 +72,7 @@ def generate_html_table(content_table, image_width='auto', image_height='auto', 
         rel_path: Whether to use the relative path of input image and output path.
         save: Whether to save output file.
         head_div: You can append some custom info in the top of the page.
+        page_size: default page size.
     """
     output_dir = os.path.split(output_path)[0]
     html = '<html>'
@@ -85,7 +96,7 @@ def generate_html_table(content_table, image_width='auto', image_height='auto', 
     html += '<body>'
     if head_div:
         html += head_div
-    html += """
+    html += f"""
         <table
             class="table"
             id="table"
@@ -93,6 +104,7 @@ def generate_html_table(content_table, image_width='auto', image_height='auto', 
             data-pagination="true"
             data-show-toggle="true"
             data-show-jump-to="true"
+            page-size="{page_size}"
             data-page-list="[10, 25, 50, 100, all]"
             data-show-refresh="true"
             data-show-fullscreen="true"
