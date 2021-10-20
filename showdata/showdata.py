@@ -104,7 +104,7 @@ def generate_html_table(content_table,
             data-pagination="true"
             data-show-toggle="true"
             data-show-jump-to="true"
-            page-size="{page_size}"
+            data-page-size="{page_size}"
             data-page-list="[10, 25, 50, 100, all]"
             data-show-refresh="true"
             data-show-fullscreen="true"
