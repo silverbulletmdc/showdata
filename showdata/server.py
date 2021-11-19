@@ -77,6 +77,8 @@ def parse_folder(full_path):
 @app.route('/', defaults={"subpath": "./"})
 @app.route('/<path:subpath>', methods=['GET', 'POST'])
 def server(subpath):
+    if ".." in subpath:
+        return 'File Not Found.', 404
     full_path = f'{subpath.strip()}'
     print(full_path)
     if request.method == 'GET':
