@@ -4,6 +4,7 @@ import os
 from showdata import generate_html_table
 from urllib.parse import quote
 from flask_cors import CORS
+import time
 
 allow_modify = False
 show_delete_button = False
@@ -14,19 +15,37 @@ app = Flask(__name__)
 CORS(app)
 
 
+def get_head_div(full_path):
+    sub_path = os.path.relpath(full_path, os.getcwd())
+    sub_paths = sub_path.split('/')
+
+    head_div = '<div style="margin:10px">'
+    head_div += f"<a href='/'>{os.getcwd().strip('/')}<a>"
+
+    cur_path = ''
+    for path in sub_paths:
+        cur_path = f"{cur_path}/{path}"
+        head_div += f'/<a href="{cur_path}">{path}</a>'
+    head_div += "</div>"
+    return head_div
+
+
 def parse_folder(full_path):
     files = sorted(os.listdir(full_path))
+    head_div = get_head_div(full_path)
     table = []
 
     row = {}
     print(full_path)
-    row["filename"] = f'<a href="/{os.path.split(full_path[:-1])[0]}"> .. </a>'
-    row["type"] = f"parent folder"
-    row["size"] = f""
-    row["content"] = ".."
-    if allow_modify and show_delete_button:
-        row["delete"] = f''
-    table.append(row)
+    # row["filename"] = f'<a href="/{os.path.split(full_path[:-1])[0]}"> .. </a>'
+    # row["type"] = f"parent folder"
+    # row["size"] = f""
+    # row["time"] = ''
+    # row["content"] = ".."
+
+    # if allow_modify and show_delete_button:
+    #     row["delete"] = f''
+    # table.append(row)
 
     row = {}
     if allow_modify and show_upload_button:
@@ -57,10 +76,11 @@ def parse_folder(full_path):
         if os.path.isdir(full_path + '/' + file):
             file = file + '/'
         row["filename"] = f'<a href="{quote(file)}"> {file} </a>'
+        row['time'] = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(os.path.getmtime(full_path + '/' + file)))
+        row["size"] = f"{os.path.getsize(full_path + '/' + file) / 1024 / 1024:.2f}M"
         row["type"] = f"{os.path.splitext(file)[-1]}"
-        row["size"] = f"{os.path.getsize(full_path + '/' + file) / 1024:.2f}K"
         row["content"] = file
-        if allow_modify and show_delete_button: 
+        if allow_modify and show_delete_button:
             # 不允许删除文件夹
             if os.path.isdir(full_path + '/' + file):
                 row["delete"] = ""
@@ -71,13 +91,21 @@ def parse_folder(full_path):
                 ">Delete</button>"""
         table.append(row)
 
-    return generate_html_table(table, image_width=400, save=False, rel_path=False, title=full_path, max_str_len=-1)
+    table = sorted(table, key=lambda x: x['time'])[::-1]
+    return generate_html_table(table,
+                               image_width=256,
+                               save=False,
+                               rel_path=False,
+                               title=full_path,
+                               max_str_len=-1,
+                               page_size=50,
+                               head_div=head_div)
 
 
 @app.route('/', defaults={"subpath": "./"})
 @app.route('/<path:subpath>', methods=['GET', 'POST'])
 def server(subpath):
-    if ".." in subpath:
+    if ".." in subpath or '..' in os.path.relpath(subpath, '.'):
         return 'File Not Found.', 404
     full_path = f'{subpath.strip()}'
     print(full_path)
@@ -100,7 +128,8 @@ def server(subpath):
 
         # 删除文件
         elif action == 'delete':
-            user_password = request.args.get('password', default='1234', type=str)
+            user_password = request.args.get(
+                'password', default='1234', type=str)
             if allow_modify and password == user_password:
                 if os.path.exists(full_path):
                     os.system('rm -f "%s"' % full_path)
