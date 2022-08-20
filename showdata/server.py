@@ -30,10 +30,48 @@ def get_head_div(full_path):
     head_div += "</div>"
     return head_div
 
+def all_images(files):
+    exts = ['.jpg', '.png', '.JPEG', '.mp4']
+    for file in files:
+        if not os.path.splitext(file)[1] in exts:
+            return False
+    return True
+            
+
+def grid_image(files, full_path, head_div):
+    cols = 6
+    table = []
+    row = {"row\col": 0}
+    for i, img_path in enumerate(files):
+        row[i % cols] = str(img_path)
+        if len(row)-1 == cols:
+            table.append(row)
+            row = {"row\col": i // cols+1}
+
+    if len(row) > 0:
+        table.append(row)
+
+    return generate_html_table(table,
+                               image_width=256,
+                               save=False,
+                               rel_path=False,
+                               title=full_path,
+                               max_str_len=-1,
+                               page_size=50,
+                               head_div=head_div)
+
 
 def parse_folder(full_path):
     files = sorted(os.listdir(full_path))
     head_div = get_head_div(full_path)
+
+    if len(files) > 10000: 
+        head_div += f"<div>Total {len(files)} files, only show top 10000 files for speed.</div>"
+        files = files[:10000]
+
+    if len(files) > 20 and all_images(files):
+        return grid_image(files, full_path, head_div)
+
     table = []
 
     row = {}
