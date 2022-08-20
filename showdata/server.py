@@ -43,7 +43,7 @@ def grid_image(files, full_path, head_div):
     table = []
     row = {"row\col": 0}
     for i, img_path in enumerate(files):
-        row[i % cols] = str(img_path)
+        row[i % cols] = {'src': str(img_path), 'text': str(img_path)+' '}
         if len(row)-1 == cols:
             table.append(row)
             row = {"row\col": i // cols+1}
@@ -63,6 +63,9 @@ def grid_image(files, full_path, head_div):
 
 def parse_folder(full_path):
     files = sorted(os.listdir(full_path))
+    # 过滤掉python文件
+    for ext in [".py", ".cpp", ".ipynb", ".c", ".md"]:
+        files = [file for file in files if not file.endswith(ext)]
     head_div = get_head_div(full_path)
 
     if len(files) > 10000: 
