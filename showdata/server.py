@@ -31,7 +31,7 @@ def get_head_div(full_path):
     return head_div
 
 def all_images(files):
-    exts = ['.jpg', '.png', '.JPEG', '.mp4']
+    exts = ['.jpg', '.png', '.JPEG']
     for file in files:
         if not os.path.splitext(file)[1] in exts:
             return False
