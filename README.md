@@ -1,8 +1,8 @@
 ![logo](assets/logo.png)
 # ShowData: Show your dataset in web browser!
 
-ShowData is a python tool to generate html tables for large scale image dataset, especially for the dataset in remote server. 
-It provides some useful commond line tools and fully customizeble API to generate html file for multi media files.
+ShowData is a python tool to visualize and manage the multi-media files in remote server. 
+It provides useful commond-line tools and fully customizeble API to generate html file for multi-media files.
 
 ## Examples
 It supports filtering data by text, sorting data by coloum values and pagination. 
@@ -23,7 +23,7 @@ pip install -U git+https://github.com/silverbulletmdc/showdata
 ## Command Line Tools
 
 ### Basic usage
-Open a file server (an stronger alternative to `python -m http.server`)
+Open a file server (a stronger alternative to `python -m http.server`)
 ``` 
 showdata server -p <port, default 8000> -h <host, default 0.0.0.0>
 ```
