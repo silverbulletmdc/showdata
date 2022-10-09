@@ -45,8 +45,7 @@ def handle_src(src, output_dir, rel_path=True):
     if rel_path:
         src = os.path.relpath(src, output_dir)
         assert '..' not in src, 'The html file must in one of the parent folder of all images.'
-    else:
-        return quote(src)
+    return quote(src)
 
 
 def generate_html_table(content_table,
