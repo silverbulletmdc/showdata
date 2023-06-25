@@ -187,7 +187,6 @@ def generate_html_table(content_table,
         all_content_dict.append(content_dict)
 
     html += """
-    <a href="https://github.com/silverbulletmdc/showdata">Use showdata: pip install showdata && showdata server (Give showdata a star in github!)</a>
     <script>
     var $table = $('#table')
     $(function() {

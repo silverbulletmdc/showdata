@@ -12,22 +12,34 @@ show_delete_button = False
 show_upload_button = False
 index_hide = True
 password = "1234"
-root_url = ""
+root_url = "/"
 app = Flask(__name__)
 CORS(app)
 
 
 def get_head_div(full_path):
+    github_div = '<iframe src="https://ghbtns.com/github-btn.html?user=silverbulletmdc&repo=showdata&type=star&count=true&size=large" frameborder="0" scrolling="0" width="150" height="30" title="GitHub"></iframe>'
+    path_div = get_path_div(full_path)
+    return f"""
+    <div style="display: flex; margin: 10px">
+        {path_div}
+        <div style="flex: 1"></div>
+        {github_div}
+    </div>
+    """
+
+def get_path_div(full_path):
     sub_path = os.path.relpath(full_path, os.getcwd())
     sub_paths = sub_path.split('/')
 
-    head_div = '<div style="margin:10px">'
-    head_div += f"<a href='/'>{os.getcwd().rstrip('/')}<a>"
+    head_div = '<div>'
+    head_div += f"<a href='{root_url}'>{os.getcwd().rstrip('/')}<a>"
 
     cur_path = root_url
     for path in sub_paths:
         cur_path = f"{cur_path}/{path}"
-        head_div += f'/<a href="{cur_path}">{path}</a>'
+        print(cur_path)
+        head_div += f'/<a href="{cur_path}/">{path}</a>'
     head_div += "</div>"
     return head_div
 
@@ -67,6 +79,9 @@ def parse_folder(full_path):
     # 过滤掉python文件
     for ext in [".py", ".cpp", ".ipynb", ".c", ".md"]:
         files = [file for file in files if not file.endswith(ext)]
+    # 过滤掉隐藏文件夹
+    a = ""
+    files = [file for file in files if not file.startswith('.')]
     head_div = get_head_div(full_path)
 
     if len(files) > 10000: 
@@ -145,6 +160,16 @@ def parse_folder(full_path):
                                head_div=head_div)
 
 
+def safety_check(path):
+    folder, file = os.path.split(path)
+
+    if file.startswith('.'):
+        return False
+    if 'id_rsa' in file:
+        return False
+
+    return True
+
 @app.route('/', defaults={"subpath": "./"})
 @app.route('/<path:subpath>', methods=['GET', 'POST'])
 def server(subpath):
@@ -164,6 +189,8 @@ def server(subpath):
                         return redirect('/' + full_path + 'index.html')
                     return parse_folder(full_path)
                 else:
+                    if not safety_check(full_path):
+                        return 'Permission Error', 404
                     data = open(full_path, 'rb').read()
                     return Response(data, mimetype=mimetypes.guess_type(subpath)[0])
             else:
