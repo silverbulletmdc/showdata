@@ -70,12 +70,14 @@ def compare(compare_folders, output_path, width, exts):
 @click.option('--show-delete-button', default=False, type=bool, help="Whethter to show the delete button.")
 @click.option('--index-hide', default=True, type=bool, help="Whether to hide the folder content if there is a index.html in that folder.")
 @click.option('--password', default="1234", type=str, help="Password")
-def server(port, host, debug, allow_modify, show_delete_button, index_hide, password):
+@click.option('--root-url', default="", type=str, help="Root url used for redirect.")
+def server(port, host, debug, allow_modify, show_delete_button, index_hide, password, root_url):
     showdata_server.allow_modify = allow_modify
     showdata_server.show_delete_button = show_delete_button
     showdata_server.index_hide = index_hide
     showdata_server.password = password
     showdata_server.app.run(host, port, debug=debug)
+    showdata_server.root_url = root_url
 
 
 if __name__ == "__main__":

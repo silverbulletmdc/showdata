@@ -12,6 +12,7 @@ show_delete_button = False
 show_upload_button = False
 index_hide = True
 password = "1234"
+root_url = ""
 app = Flask(__name__)
 CORS(app)
 
@@ -21,9 +22,9 @@ def get_head_div(full_path):
     sub_paths = sub_path.split('/')
 
     head_div = '<div style="margin:10px">'
-    head_div += f"<a href='/'>{os.getcwd().strip('/')}<a>"
+    head_div += f"<a href='/'>{os.getcwd().rstrip('/')}<a>"
 
-    cur_path = ''
+    cur_path = root_url
     for path in sub_paths:
         cur_path = f"{cur_path}/{path}"
         head_div += f'/<a href="{cur_path}">{path}</a>'
