@@ -11,7 +11,7 @@ def read_file(filename):
 
 setup(
     name="showdata",
-    version="1.4.8",
+    version="1.4.9",
     author="Dechao Meng",
     url="https://github.com/silverbulletmdc/showdata",
     author_email="dechao.meng@vipl.ict.ac.cn",
@@ -20,5 +20,8 @@ setup(
     long_description=open("README.rst").read(),
     packages=find_packages(exclude=('examples', 'examples.*')),
     scripts=glob.glob('scripts/*'),
-    install_requires=['click', 'pandas', 'flask', 'flask-cors']
+    install_requires=['click', 'pandas', 'flask', 'flask-cors'],
+    package_data={
+        'showdata': ['static/*']
+    }
 )

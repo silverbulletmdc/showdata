@@ -3,6 +3,7 @@ import os
 from urllib.parse import urlencode, quote
 from tqdm import tqdm
 
+template_path = os.path.join(os.path.split(__file__)[0], 'static/template.html')
 
 def time_it(func):
     def wrapper(*args, **kwargs):
@@ -48,6 +49,8 @@ def handle_src(src, output_dir, rel_path=True):
     return quote(src)
 
 
+github_head = '<iframe src="https://ghbtns.com/github-btn.html?user=silverbulletmdc&repo=showdata&type=star&count=true&size=large" frameborder="0" scrolling="0" width="150" height="30" title="GitHub"></iframe>'
+
 def generate_html_table(content_table,
                         image_width='auto',
                         image_height='auto',
@@ -57,7 +60,7 @@ def generate_html_table(content_table,
                         rel_path=True,
                         save=True,
                         title="Showdata",
-                        head_div=None,
+                        head_div=github_head,
                         page_size=10):
     """Generate html table
 
