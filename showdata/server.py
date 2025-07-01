@@ -170,6 +170,19 @@ def safety_check(path):
 
     return True
 
+def generate_chunks(file_path, chunk_size=256*1024):
+    with open(file_path, 'rb') as f:
+        while True:
+            chunk = f.read(chunk_size)
+            if not chunk:
+                break
+            yield chunk
+
+def get_mp4(video_path):
+    return Response(generate_chunks(video_path), mimetype="video/mp4", headers={
+        'Accept-Ranges': 'bytes'  # 告知浏览器支持范围请求
+    })
+
 @app.route('/', defaults={"subpath": "./"})
 @app.route('/<path:subpath>', methods=['GET', 'POST'])
 def server(subpath):
@@ -191,8 +204,11 @@ def server(subpath):
                 else:
                     if not safety_check(full_path):
                         return 'Permission Error', 404
-                    data = open(full_path, 'rb').read()
-                    return Response(data, mimetype=mimetypes.guess_type(subpath)[0])
+                    if full_path.endswith('.mp4'):
+                        return get_mp4(full_path)
+                    else:
+                        data = open(full_path, 'rb').read()
+                        return Response(data, mimetype=mimetypes.guess_type(subpath)[0])
             else:
                 return 'File not Found', 404
 
