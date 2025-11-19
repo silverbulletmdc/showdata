@@ -3,6 +3,7 @@ import os
 from urllib.parse import urlencode, quote
 from tqdm import tqdm
 
+static_dir = os.path.join(os.path.split(__file__)[0], 'static')
 template_path = os.path.join(os.path.split(__file__)[0], 'static/template.html')
 
 def time_it(func):
@@ -87,12 +88,31 @@ def generate_html_table(content_table,
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta http-equiv="Expires" content="0" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <link href="https://unpkg.com/jquery-resizable-columns@0.2.3/dist/jquery.resizableColumns.css" rel="stylesheet">
-        <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css" rel="stylesheet">
-        <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://unpkg.zhimg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.css">
-        <link href="https://unpkg.zhimg.com/bootstrap-table@1.18.0/dist/extensions/page-jump-to/bootstrap-table-page-jump-to.min.css" rel="stylesheet">
     """
+        # <link rel="stylesheet" href="https://unpkg.zhimg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.css">
+        # <link href="https://unpkg.zhimg.com/bootstrap-table@1.18.0/dist/extensions/page-jump-to/bootstrap-table-page-jump-to.min.css" rel="stylesheet">
+        # <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css" rel="stylesheet">
+        # <link href="https://unpkg.com/jquery-resizable-columns@0.2.3/dist/jquery.resizableColumns.css" rel="stylesheet">
+        # <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+
+    def insert_css(css_name, html):
+        with open(os.path.join(static_dir, css_name)) as f:
+            css_content = f.read()
+        html += f"<style>\n{css_content}\n</style>"
+        return html
+
+    def insert_js(js_name, html):
+        with open(os.path.join(static_dir, js_name)) as f:
+            css_content = f.read()
+        html += f"<script>\n{css_content}\n</script>"
+        return html
+    
+    html = insert_css("jquery.resizableColumns.css", html)
+    html = insert_css("bootstrap-4.5.3.min.css", html)
+    html = insert_css("bootstrap-table.min.css", html)
+    html = insert_css("bootstrap-table-page-jump-to.min.css", html)
+    html = insert_css("bootstrap-table-filter-control.min.css", html)
+    html = insert_css("font-awesome-5.15.1.min.css", html)
 
     html += '</head>'
     html += '<body>'
@@ -135,15 +155,23 @@ def generate_html_table(content_table,
     html += '</table>'
 
     html += """
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://unpkg.com/jquery-resizable-columns@0.2.3/dist/jquery.resizableColumns.min.js"></script>
-        <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.min.js"></script>
-        <script src="https://unpkg.zhimg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.js"></script>
-        <script src="https://unpkg.zhimg.com/bootstrap-table@1.18.0/dist/extensions/page-jump-to/bootstrap-table-page-jump-to.min.js"></script>
-        <script src="https://unpkg.zhimg.com/bootstrap-table@1.18.1/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
-        <script src="https://unpkg.zhimg.com/bootstrap-table@1.18.1/dist/extensions/resizable/bootstrap-table-resizable.js"></script>
     """
+        # <script src="https://unpkg.zhimg.com/bootstrap-table@1.18.0/dist/bootstrap-table.min.js"></script>
+        # <script src="https://unpkg.zhimg.com/bootstrap-table@1.18.0/dist/extensions/page-jump-to/bootstrap-table-page-jump-to.min.js"></script>
+        # <script src="https://unpkg.zhimg.com/bootstrap-table@1.18.1/dist/extensions/resizable/bootstrap-table-resizable.js"></script>
+        # <script src="https://unpkg.zhimg.com/bootstrap-table@1.18.1/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+        # <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+        # <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        # <script src="https://unpkg.com/jquery-resizable-columns@0.2.3/dist/jquery.resizableColumns.min.js"></script>
+        # <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.min.js"></script>
+    html = insert_js("jquery-3.5.1.min.js", html)
+    html = insert_js("popper-1.14.7.min.js", html)
+    html = insert_js("jquery.resizableColumns-0.2.3.min.js", html)
+    html = insert_js("bootstrap-4.5.3.min.js", html)
+    html = insert_js("bootstrap-table.min.js", html)
+    html = insert_js("bootstrap-table-page-jump-to.min.js", html)
+    html = insert_js("bootstrap-table-resizable.min.js", html)
+    html = insert_js("bootstrap-table-filter-control.min.js", html)
 
     width = image_width
     height = image_height

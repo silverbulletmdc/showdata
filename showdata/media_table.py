@@ -41,14 +41,23 @@ def main(root_path, files, host, port, media_width):
             for file in files:
                 quote_path = quote(f"{folder}/{file}")
                 if quote_path.endswith('.mp4'):
-                    row[file + " "] = f"<video src='/media?path={quote_path}' preload='none' width={media_width} controls>"
+                    row[file + " "] = f"<video src='/media?path={quote_path}' preload='auto' width={media_width} controls>"
+                elif quote_path.endswith(".txt"):
+                    txt_path = os.path.join(root_path, quote_path)
+                    if os.path.exists(txt_path):
+                        with open(txt_path, "r") as f:
+                            meta = f.read()
+                    else:
+                        meta = ""
+
+                    row[file + " "] = f"<pre><code>{meta}</code></pre>"
                 elif quote_path.endswith(".png") or quote_path.endswith(".jpg"):
                     row[file + " "] = f"<image src='/media?path={quote_path}' width={media_width}>"
                 elif quote_path.endswith(".mp3") or quote_path.endswith(".wav"):
-                    row[file + " "] = f"<audio src='/media?path={quote_path}'>"
+                    row[file + " "] = f"<audio src='/media?path={quote_path}' controls>"
             table.append(row)
 
-        table = generate_html_table(table, rel_path=False, max_str_len=200000, page_size=10)
+        table = generate_html_table(table, rel_path=False, max_str_len=200000, page_size=4)
 
         return table
 
